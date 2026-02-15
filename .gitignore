@@ -1,0 +1,66 @@
+# --- SISTEM OPERASI & UMUM ---
+.DS_Store
+Thumbs.db
+*.log
+
+# --- EDITOR / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- FRONTEND (REACT / NODE.JS) ---
+# Folder ini sangat berat, jangan di-upload. Nanti di-install ulang pakai 'npm install'
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Folder hasil build frontend (deploy)
+**/dist/
+**/build/
+
+# File Environment (biasanya berisi rahasia/password)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- BACKEND (C++ / CMAKE) ---
+# Folder hasil build C++ (tempat file .exe berada)
+backend/build/
+backend/out/
+backend/bin/
+
+# File Cache CMake
+**/CMakeCache.txt
+**/CMakeFiles/
+**/cmake_install.cmake
+**/Makefile
+**/rules.ninja
+**/cmake_install.cmake
+
+# File Binary & Executable (Windows)
+*.exe
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.obj
+*.lib
+*.a
+*.exp
+
+# --- DEPENDENCY MANAGER (C++) ---
+# Jika kamu pakai vcpkg untuk install mongocxx
+vcpkg_installed/
+vcpkg/
+
+# Tambahan: Abaikan dokumentasi CMake
+backend/doc/
+
+# Tambahan: Abaikan manual pages CMake
+backend/man/
+backend/share/
