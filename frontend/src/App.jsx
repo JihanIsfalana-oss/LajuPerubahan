@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Music, Mic2, Drum, Guitar, Instagram, Menu, X, MapPin, Phone, ExternalLink, ZoomIn } from 'lucide-react';
 import logoEmas from './logolp.png';
-import fotoBand1 from './bandplaceholder 3.jpg';
-import fotoBand2 from './bandplaceholder 4.jpg';
-import fotoBand3 from './bandplaceholder 5.jpg';
+import fotoBand1 from './foto1.jpg';
+import fotoBand2 from './foto2.jpg';
+import fotoBand3 from './foto3.JPG';
 
 const LajuPerubahanWeb = () => {
   const [isScrolled, setIsScrolled] = useState(false);
