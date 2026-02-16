@@ -262,53 +262,26 @@ const LajuPerubahanWeb = () => {
         </div>
       </section>
 
-     {/* --- MEMBERS SECTION (DENGAN FITUR UPLOAD) --- */}
+      {/* --- MEMBERS SECTION --- */}
       <section id="members" className="py-24 bg-slate-900 relative">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 animate-enter">
             <h2 className="text-4xl md:text-6xl font-bold text-white">The <span className="text-amber-500">Personnel</span></h2>
-            <p className="text-slate-400 mt-4 max-w-xl mx-auto">Klik kartu untuk detail.</p>
+            <p className="text-slate-400 mt-4 max-w-xl mx-auto">Click on a card to see details.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {members.map((member, index) => (
-              <div 
-                key={index} 
-                className="group relative bg-slate-950 border border-slate-800 p-8 rounded-2xl hover:border-amber-500 transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center text-center animate-enter"
-                style={{ animationDelay: `${index * 0.15}s` }}
-              >
-                {/* --- AREA FOTO & UPLOAD --- */}
-                <div className="relative mb-6 w-32 h-32 mx-auto">
-                    {/* Wadah Foto Lingkaran */}
-                    <div className="w-full h-full rounded-full bg-slate-900 border-4 border-slate-800 shadow-inner overflow-hidden flex items-center justify-center group-hover:border-amber-500 transition-colors">
-                        {member.image && (member.image.startsWith("data:image") || member.image.startsWith("/")) ? (
-                            <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
-                        ) : (
-                            <div className="text-amber-500 group-hover:text-amber-500 transition-colors">
-                                {member.icon}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* INPUT UPLOAD RAHASIA (Muncul saat Hover) */}
-                    <label className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer z-10">
-                        <span className="text-white text-[10px] font-bold uppercase tracking-wider text-center px-2">
-                            Ganti<br/>Foto
-                        </span>
-                        <input 
-                            type="file" 
-                            accept="image/*" 
-                            className="hidden" 
-                            onChange={(e) => handleImageUpload(e, member.name)}
-                        />
-                    </label>
+              <div className="relative group"> 
+                  key={index} 
+                  onClick={() => setActiveModal({ type: 'member', data: member })}
+                  className="group relative bg-slate-950 border border-slate-800 p-8 rounded-2xl hover:border-amber-500 transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center text-center animate-enter"
+                  style={{ animationDelay: `${index * 0.15}s` }}
+                <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-900 text-amber-500 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors shadow-inner">
+                  {member.icon}
                 </div>
-
-                {/* --- NAMA & ROLE (Klik untuk Detail) --- */}
-                <div onClick={() => setActiveModal({ type: 'member', data: member })} className="w-full">
-                    <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-500 transition-colors">{member.name}</h3>
-                    <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{member.role}</p>
-                </div>
+                <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-500 transition-colors">{member.name}</h3>
+                <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{member.role}</p>
               </div>
             ))}
           </div>
