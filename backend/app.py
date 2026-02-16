@@ -1,15 +1,17 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 import pandas as pd
 import numpy as np
+import os
 
 app = Flask(__name__)
 CORS(app)
 
 # --- KONFIGURASI DATABASE ---
-MONGO_URI = "mongodb://localhost:27017/"
+MONGO_URI = os.environ.get("mongodb+srv://falan:Isfalana22_*@cluster0.d4yrajq.mongodb.net/?appName=Cluster0", "mongodb://localhost:27017/")
 DB_NAME = "LajuPerubahanDB"
 COLLECTION_NAME = "personil_python_v1"
 
