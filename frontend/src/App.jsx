@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Music, Mic2, Drum, Guitar, Instagram, Menu, X, MapPin, Phone, ExternalLink, ZoomIn } from 'lucide-react';
+import { Music, Mic2, Drum, Guitar, Instagram, Menu, X, MapPin, Phone, ZoomIn, Play, Pause, ListMusic } from 'lucide-react';
 import logoEmas from './logolp.png';
 import fotoBand1 from './foto1.jpg';
 import fotoBand2 from './foto2.jpg';
@@ -14,6 +14,23 @@ const LajuPerubahanWeb = () => {
   const [activeModal, setActiveModal] = useState(null);
   const bandPhotos = [fotoBand1, fotoBand2, fotoBand3];
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio] = useState(new Audio('/demo.mp3')); 
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  useEffect(() => {
+    return () => {
+      audio.pause();
+    };
+  }, [audio]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -231,6 +248,60 @@ const LajuPerubahanWeb = () => {
         </div>
       </section>
 
+      {/* --- SETLIST SECTION --- */}
+      <section id="repertoire" className="py-24 bg-slate-950 relative border-t border-slate-900">
+        <div className="container mx-auto px-6">
+            <div className="text-center mb-12 animate-enter">
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Our <span className="text-amber-500">Repertoire</span></h2>
+                <p className="text-slate-400">Songs we love to play.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Kategori 1 */}
+                <div className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-amber-500 transition-all group">
+                    <div className="flex items-center gap-3 mb-4">
+                        <ListMusic className="text-amber-500" />
+                        <h3 className="text-xl font-bold text-white">Top 40 & Hits</h3>
+                    </div>
+                    <ul className="space-y-2 text-slate-400 text-sm">
+                        <li>• As It Was - Harry Styles</li>
+                        <li>• ColdMess - Prinsa Mandagie</li>
+                        <li>• Sial - Mahalini</li>
+                        <li>• Komang - Raim Laode</li>
+                    </ul>
+                </div>
+
+                {/* Kategori 2 */}
+                <div className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-amber-500 transition-all group">
+                    <div className="flex items-center gap-3 mb-4">
+                        <Guitar className="text-amber-500" />
+                        <h3 className="text-xl font-bold text-white">Other Indonesian Songs</h3>
+                    </div>
+                    <ul className="space-y-2 text-slate-400 text-sm">
+                        <li>• Pupus - Dewa 19</li>
+                        <li>• Dan - Sheila On 7</li>
+                        <li>• Mr. Brightside - The Killers</li>
+                        <li>• Creep - Radiohead</li>
+                    </ul>
+                </div>
+
+                 {/* Kategori 3 */}
+                 <div className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-amber-500 transition-all group">
+                    <div className="flex items-center gap-3 mb-4">
+                        <Music className="text-amber-500" />
+                        <h3 className="text-xl font-bold text-white">Indonesian Songs</h3>
+                    </div>
+                    <ul className="space-y-2 text-slate-400 text-sm">
+                        <li>• Kangen - Dewa 19</li>
+                        <li>• Kenangan Terindah - Samsons</li>
+                        <li>• Manusia Bodoh - Ada Band</li>
+                        <li>• Rumah Singgah - Fabio Asher</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </section>
+
       {/* --- FOOTER --- */}
       <footer id="contact" className="bg-slate-950 pt-20 pb-10 border-t border-slate-900">
         <div className="container mx-auto px-6">
@@ -323,7 +394,25 @@ const LajuPerubahanWeb = () => {
             </div>
         </div>
       )}
-
+    {/* --- FLOATING MUSIC PLAYER --- */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <button 
+            onClick={togglePlay}
+            className="flex items-center gap-3 bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-3 rounded-full font-bold shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all hover:scale-105 animate-enter"
+        >
+            {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
+            <span className="uppercase tracking-widest text-xs">Play Our Demo</span>
+            
+            {/* Equalizer Animation (Hanya muncul saat play) */}
+            {isPlaying && (
+                <div className="flex gap-1 items-end h-4 ml-2">
+                    <div className="w-1 bg-slate-900 animate-[bounce_1s_infinite] h-2"></div>
+                    <div className="w-1 bg-slate-900 animate-[bounce_1.2s_infinite] h-4"></div>
+                    <div className="w-1 bg-slate-900 animate-[bounce_0.8s_infinite] h-3"></div>
+                </div>
+            )}
+        </button>
+      </div>
     </div>
   );
 };
