@@ -272,11 +272,12 @@ const LajuPerubahanWeb = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {members.map((member, index) => (
-              <div className="relative group"> 
+              <div 
                   key={index} 
                   onClick={() => setActiveModal({ type: 'member', data: member })}
                   className="group relative bg-slate-950 border border-slate-800 p-8 rounded-2xl hover:border-amber-500 transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center text-center animate-enter"
                   style={{ animationDelay: `${index * 0.15}s` }}
+              >
                 <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-900 text-amber-500 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors shadow-inner">
                   {member.icon}
                 </div>
