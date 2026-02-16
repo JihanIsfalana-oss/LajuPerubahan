@@ -103,6 +103,34 @@ def graphql_handler():
     except Exception as e:
         print(f"Error Server: {e}")
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/update_member', methods=['POST'])
+def update_member():
+    try:
+        data = request.get_json()
+
+        target_name = data.get('name')
+        new_image = data.get('image') 
+        
+        if not target_name:
+            return jsonify({"error": "Nama personil harus diisi"}), 400
+
+        if db_active:
+            result = collection.update_one(
+                {"name": target_name},
+                {"$set": {"image": new_image}}
+            )
+            
+            if result.modified_count > 0:
+                return jsonify({"message": f"Foto {target_name} berhasil diupdate!"}), 200
+            else:
+                return jsonify({"message": "Data tidak berubah atau nama salah."}), 400
+        else:
+            return jsonify({"error": "Database sedang Offline (Mode Demo)"}), 500
+
+    except Exception as e:
+        print(f"Error Update: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     print("🚀 Server Python Flask berjalan di port 8080...")
