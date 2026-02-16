@@ -17,48 +17,6 @@ const LajuPerubahanWeb = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [audio] = useState(new Audio('/demo.mp3')); 
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => resolve(fileReader.result);
-      fileReader.onerror = (error) => reject(error);
-    });
-  };
-
-  const handleImageUpload = async (e, memberName) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.size > 6000000) {
-        alert("Ukuran foto terlalu besar! Harap gunakan foto di bawah 6MB.");
-        return;
-    }
-
-    try {
-        const base64 = await convertToBase64(file);
-
-        const response = await fetch('lajuperubahan-production.up.railway.app', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: memberName,
-                image: base64
-            }),
-        });
-
-        if (response.ok) {
-            alert("Foto berhasil diupdate! Refresh halaman untuk melihat hasil.");
-            window.location.reload(); 
-        } else {
-            alert("Gagal mengupdate foto.");
-        }
-    } catch (error) {
-        console.error("Error upload:", error);
-        alert("Terjadi kesalahan sistem.");
-    }
-  };
-
   const togglePlay = () => {
     if (isPlaying) {
       audio.pause();
@@ -106,7 +64,7 @@ const LajuPerubahanWeb = () => {
             }
           }
         `;
-        const response = await fetch('http://localhost:8080/graphql', {
+        const response = await fetch('https://lajuperubahan-production.up.railway.app/graphql', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query }),
