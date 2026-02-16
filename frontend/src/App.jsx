@@ -196,8 +196,7 @@ const LajuPerubahanWeb = () => {
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-2">The <span className="text-amber-500">Story</span></h2>
               <div className="h-1 w-24 bg-amber-500 mb-8"></div>
               <p className="text-slate-400 leading-relaxed text-lg text-justify">
-                Kita adalah mahasiswa/i <strong className="text-slate-200">Universitas Pancasila</strong> angkatan 2025. 
-                Secara kebetulan, terdapat UKM <strong className="text-slate-200">Kipas</strong>, tempat bertemunya 4 orang ini hingga lahirnya <span className="text-amber-500 font-semibold">Laju Perubahan</span>.
+                Sebuah band yang lahir dari pertemuan tak terduga di UKM KIPAS, Universitas Pancasila. <strong className="text-slate-200">Laju Perubahan</strong> Empat mahasiswa yang berbeda jalur, namun memiliki passion yang sama, memutuskan untuk bermain musik bersama.<strong className="text-slate-200"> Berdiri pada tahun 2025</strong>, Laju Perubahan <span className="text-amber-500 font-semibold">siap menggebrak panggung musik dengan semangat!!!</span>.
               </p>
             </div>
 
