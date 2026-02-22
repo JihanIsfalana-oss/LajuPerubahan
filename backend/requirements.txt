@@ -3,3 +3,14 @@ flask-cors
 pymongo
 pandas
 numpy
+tensorflow
+torch
+torchvision
+scikit-learn
+langchain-huggingface
+langchain-core
+transformers
+librosa
+psutil
+soundfile
+soxr
