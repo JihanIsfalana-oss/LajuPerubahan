@@ -9,10 +9,13 @@ import fotoBand3 from './foto3.JPG';
 const LajuPerubahanWeb = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [members, setMembers] = useState([]);
-  const [loadingMembers, setLoadingMembers] = useState(true);
   const [showSplash, setShowSplash] = useState(true);
   const [activeModal, setActiveModal] = useState(null);
+
+  const [members, setMembers] = useState([]);
+  const [loadingMembers, setLoadingMembers] = useState(true);
+  const [repertoire, setRepertoire] = useState([]);
+  const [loadingRepertoire, setLoadingRepertoire] = useState(true);
 
   const bandPhotos = [fotoBand1, fotoBand2, fotoBand3];
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -68,85 +71,57 @@ const LajuPerubahanWeb = () => {
   }, []);
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchData = async () => {
+      const apiUrl = 'https://isfalana-lajuperubahan-api.hf.space/graphql'; 
+
       try {
-        const apiUrl = 'https://isfalana-lajuperubahan-api.hf.space/graphql'; 
-        
-        const query = `
-          {
-            getAllMembers {
-              name, role, description, instagram
-            }
-          }
-        `;
-        const response = await fetch(apiUrl, {
+        const queryMembers = `{ getAllMembers { name, role, description, instagram } }`;
+        const resMembers = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query }),
+          body: JSON.stringify({ query: queryMembers }),
         });
 
-        if (!response.ok) throw new Error("Server Error");
-        const result = await response.json();
-        
-        if (result.data && result.data.getAllMembers) {
-          const mappedMembers = result.data.getAllMembers.map(p => ({
-            name: p.name,
-            role: p.role,
-            desc: p.description,
-            instagram: p.instagram,
-            icon: getIconByRole(p.role)
-          }));
-          setMembers(mappedMembers);
+        if (resMembers.ok) {
+          const result = await resMembers.json();
+          if (result.data && result.data.getAllMembers) {
+            const mappedMembers = result.data.getAllMembers.map(p => ({
+              ...p,
+              icon: getIconByRole(p.role)
+            }));
+            setMembers(mappedMembers);
+          }
         }
       } catch (err) {
-        setMembers([
-            { name: "Liam", role: "Lead Vocal", desc: "The Gallagherr", instagram: "https://www.instagram.com/gallaaagherr", icon: <Mic2 className="w-10 h-10" /> },
-            { name: "Ernest", role: "Gitaris", desc: "Ernest Maarteens", instagram: "https://www.instagram.com/ernesstwn", icon: <Guitar className="w-10 h-10" /> },
-            { name: "Falan", role: "Drummer", desc: "Mr. JayBeat", instagram: "https://www.instagram.com/flnisfalana", icon: <Drum className="w-10 h-10" /> },
-            { name: "Yurika", role: "Bassist & Vocal 2", desc: "The Angel Of Laju Perubahan", instagram: "https://www.instagram.com/yurikarmdhni", icon: <Music className="w-10 h-10" /> }
-        ]);
+        console.error("Gagal load members:", err);
       } finally {
         setLoadingMembers(false);
       }
+
+      try {
+        const queryRepertoire = `{ getRepertoire { title, icon, songs } }`;
+        const resRepertoire = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: queryRepertoire }),
+        });
+
+        if (resRepertoire.ok) {
+          const result = await resRepertoire.json();
+          if (result.data && result.data.getRepertoire) {
+            setRepertoire(result.data.getRepertoire);
+          }
+        }
+      } catch (err) {
+        console.error("Gagal load repertoire:", err);
+      } finally {
+        setLoadingRepertoire(false);
+      }
     };
-    fetchMembers();
+
+    fetchData();
   }, []);
 
-  // --- DATA REPERTOIRE HARDCODE ---
-  const repertoireData = [
-    {
-      title: "Top 4 & Hits",
-      icon: <ListMusic className="text-amber-500" />,
-      songs: [
-        "Beautiful Things - Benson Boone",
-        "Lose Control - Teddy Swims",
-        "Espresso - Sabrina Carpenter",
-        "Too Sweet - Hozier"
-      ]
-    },
-    {
-      title: "Other Songs",
-      icon: <Guitar className="text-amber-500" />,
-      songs: [
-        "I Don't Love You - My Chemical Romance",
-        "Helena - My Chemical Romance",
-        "Green Tinted Sixties Mind - Mr. Big",
-        "Just Take My Heart - Mr. Big"
-      ]
-    },
-    {
-      title: "Indonesian Songs",
-      icon: <Music className="text-amber-500" />,
-      songs: [
-        "Cukup Siti Nurbaya - Dewa 19",
-        "Hidup Untukmu Mati Tanpamu - Noah",
-        "Jadi yang Kuinginkan - Vierratale",
-        "Biarlah - Killing Me Inside"
-      ]
-    }
-  ];
-
-  // --- LOGIC AI GENERATOR ---
   const handleGenerateLyrics = async (e) => {
     e.preventDefault();
     setAiLoading(true);
@@ -209,6 +184,15 @@ const LajuPerubahanWeb = () => {
     return <Music className="w-10 h-10" />;
   };
 
+  const renderRepertoireIcon = (iconName) => {
+    switch (iconName) {
+      case 'ListMusic': return <ListMusic className="text-amber-500 w-6 h-6" />;
+      case 'Guitar': return <Guitar className="text-amber-500 w-6 h-6" />;
+      case 'Music': return <Music className="text-amber-500 w-6 h-6" />;
+      default: return <Music className="text-amber-500 w-6 h-6" />;
+    }
+  };
+
   const scrollToHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -228,7 +212,6 @@ const LajuPerubahanWeb = () => {
     .animate-enter {
       animation: fadeInScale 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-    /* Scrollbar Cantik untuk Lirik */
     .lyrics-scroll::-webkit-scrollbar {
       width: 8px;
     }
@@ -350,26 +333,30 @@ const LajuPerubahanWeb = () => {
             <p className="text-slate-400 mt-4 max-w-xl mx-auto">Click on a card to see details.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {members.map((member, index) => (
-              <div 
-                  key={index} 
-                  onClick={() => setActiveModal({ type: 'member', data: member })}
-                  className="group relative bg-slate-950 border border-slate-800 p-8 rounded-2xl hover:border-amber-500 transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center text-center animate-enter"
-                  style={{ animationDelay: `${index * 0.15}s` }}
-              >
-                <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-900 text-amber-500 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors shadow-inner">
-                  {member.icon}
+          {loadingMembers ? (
+             <div className="text-center text-amber-500 font-mono animate-pulse py-10">Memuat data personil dari Cloud...</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {members.map((member, index) => (
+                <div 
+                    key={index} 
+                    onClick={() => setActiveModal({ type: 'member', data: member })}
+                    className="group relative bg-slate-950 border border-slate-800 p-8 rounded-2xl hover:border-amber-500 transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center text-center animate-enter"
+                    style={{ animationDelay: `${index * 0.15}s` }}
+                >
+                  <div className="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-900 text-amber-500 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors shadow-inner">
+                    {member.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-500 transition-colors">{member.name}</h3>
+                  <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{member.role}</p>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-amber-500 transition-colors">{member.name}</h3>
-                <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{member.role}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* --- SETLIST SECTION (UPDATED) --- */}
+      {/* --- SETLIST SECTION --- */}
       <section id="repertoire" className="py-24 bg-slate-950 relative border-t border-slate-900">
         <div className="container mx-auto px-6">
             <div className="text-center mb-12 animate-enter">
@@ -377,27 +364,31 @@ const LajuPerubahanWeb = () => {
                 <p className="text-slate-400">Songs we love to play. Klik lagunya!</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {repertoireData.map((category, index) => (
-                    <div key={index} className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-amber-500 transition-all group">
-                        <div className="flex items-center gap-3 mb-4">
-                            {category.icon}
-                            <h3 className="text-xl font-bold text-white">{category.title}</h3>
-                        </div>
-                        <ul className="space-y-2 text-slate-400 text-sm">
-                            {category.songs.map((song, songIndex) => (
-                                <li 
-                                    key={songIndex}
-                                    onClick={() => setActiveModal({ type: 'song', title: song })}
-                                    className="cursor-pointer hover:text-white hover:pl-2 hover:text-amber-400 transition-all duration-300 flex items-center gap-2"
-                                >
-                                    <span className="text-amber-600 text-xs">•</span> {song}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
-            </div>
+            {loadingRepertoire ? (
+               <div className="text-center text-amber-500 font-mono animate-pulse py-10">Memuat setlist dari MongoDB...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {repertoire.map((category, index) => (
+                      <div key={index} className="bg-slate-900 p-6 rounded-xl border border-slate-800 hover:border-amber-500 transition-all group">
+                          <div className="flex items-center gap-3 mb-4">
+                              {renderRepertoireIcon(category.icon)}
+                              <h3 className="text-xl font-bold text-white">{category.title}</h3>
+                          </div>
+                          <ul className="space-y-2 text-slate-400 text-sm">
+                              {category.songs.map((song, songIndex) => (
+                                  <li 
+                                      key={songIndex}
+                                      onClick={() => setActiveModal({ type: 'song', title: song })}
+                                      className="cursor-pointer hover:text-white hover:pl-2 hover:text-amber-400 transition-all duration-300 flex items-center gap-2"
+                                  >
+                                      <span className="text-amber-600 text-xs">•</span> {song}
+                                  </li>
+                              ))}
+                          </ul>
+                      </div>
+                  ))}
+              </div>
+            )}
         </div>
       </section>
 
@@ -537,7 +528,7 @@ const LajuPerubahanWeb = () => {
                         <label className="block text-slate-300 mb-2 font-medium text-sm uppercase tracking-wide">Pilih File Audio (Max 10MB)</label>
                         <input 
                             type="file" 
-                            accept="audio/mp3, audio/wav"
+                            accept="audio/*, .mp3, .wav, audio/mpeg"
                             onChange={(e) => setAudioFile(e.target.files[0])}
                             className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-purple-500 outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-500 file:text-white hover:file:bg-purple-600 transition"
                             required
