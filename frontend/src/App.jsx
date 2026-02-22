@@ -70,7 +70,7 @@ const LajuPerubahanWeb = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const apiUrl = 'http://localhost:8080/graphql'; 
+        const apiUrl = 'https://isfalana-lajuperubahan-api.hf.space/graphql'; 
         
         const query = `
           {
@@ -154,7 +154,7 @@ const LajuPerubahanWeb = () => {
     setGeneratedLyrics('');
 
     try {
-      const response = await axios.post('http://localhost:8080/create_lyrics', {
+      const response = await axios.post('https://isfalana-lajuperubahan-api.hf.space/create_lyrics', {
         topic: topic,
         genre: genre
       });
@@ -184,7 +184,7 @@ const LajuPerubahanWeb = () => {
     formData.append('file', audioFile);
 
     try {
-      const response = await axios.post('http://localhost:8080/analyze_audio', formData, {
+      const response = await axios.post('https://isfalana-lajuperubahan-api.hf.space/analyze_audio', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
