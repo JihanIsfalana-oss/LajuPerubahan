@@ -658,7 +658,7 @@ const LajuPerubahanWeb = () => {
                             <h2 className="text-4xl md:text-6xl font-bold text-white">{activeModal.data.name}</h2>
                             <p className="text-amber-500 text-xl font-bold uppercase tracking-widest">{activeModal.data.role}</p>
                             <div className="h-1 w-20 bg-amber-500 mx-auto md:mx-0"></div>
-                            <p className="text-slate-300 text-lg leading-relaxed italic">"{activeModal.data.desc}"</p>
+                            <p className="text-slate-300 text-lg leading-relaxed italic">"{activeModal.data.description}"</p>
                             
                             <a 
                                 href={activeModal.data.instagram} 
